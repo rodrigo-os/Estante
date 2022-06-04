@@ -6,8 +6,10 @@ import androidx.room.Relation
 data class ComicWithCollection(
     @Embedded val comic: Comic,
     @Relation(
-        parentColumn = "comicId",
+        parentColumn = "collectionComicId",
         entityColumn = "collectionId",
     )
-    val collections: List<Collection>
+    val collection: Collection
+//    val collections: List<Collection>
+
 )

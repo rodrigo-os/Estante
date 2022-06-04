@@ -7,8 +7,8 @@ data class UserWithCollectionsAndComics(
     @Embedded val user: User,
     @Relation(
         entity = Collection::class,
-        parentColumn = "userId",
-        entityColumn = "collectionCreatorId"
+        parentColumn = "collections",
+        entityColumn = "collectionId"
     )
     val collections: List<CollectionWithComics>
 )

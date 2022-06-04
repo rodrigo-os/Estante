@@ -8,8 +8,7 @@ data class CollectionWithComics(
     @Embedded val collection: Collection,
     @Relation(
         parentColumn = "collectionId",
-        entityColumn = "comicId",
-        associateBy = Junction(CollectionComicCrossRef::class)
+        entityColumn = "collectionComicId",
     )
     val comics: List<Comic>
 )
