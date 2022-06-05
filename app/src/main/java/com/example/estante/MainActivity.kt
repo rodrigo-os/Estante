@@ -119,13 +119,13 @@ fun BookshelfApp(
             startDestination = Screen.UserScreen.route
         ) {
             composable(Screen.UserScreen.route) {
-                UsersScreen()
+                UsersScreen(navController, userViewModel)
             }
             composable(Screen.CollectionScreen.route) {
-                CollectionsScreen()
+                CollectionsScreen(navController, collectionViewModel)
             }
             composable(Screen.ComicScreen.route) {
-                ComicsScreen()
+                ComicsScreen(navController, comicViewModel)
             }
             composable(Screen.UserDetails.route) {
 

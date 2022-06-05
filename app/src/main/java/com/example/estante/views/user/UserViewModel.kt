@@ -8,6 +8,27 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class UserViewModel(private val dao: UserDao) : ViewModel() {
+
+//    private val _userList: MutableLiveData<List<User>> = MutableLiveData(
+//        listOf(
+//            User(
+//                0,
+//                "Rodrigo Oliveira da Silva",
+//                0,
+//            ),
+//            User(
+//                1,
+//                "João",
+//                0,
+//            ),
+//            User(
+//                2,
+//                "Maria",
+//                0,
+//            ),
+//        )
+//    )
+
     val allUsers: LiveData<List<User>> = dao.getUsers().asLiveData()
 
     val allUsersWithCollectionsAndComics: LiveData<List<UserWithCollectionsAndComics>> =
