@@ -10,8 +10,11 @@ import java.lang.IllegalArgumentException
 class CollectionViewModel(private val dao: CollectionDao) : ViewModel() {
     val allCollections: LiveData<List<Collection>> = dao.getCollections().asLiveData()
 
-    val allCollectionsWithComics: LiveData<List<CollectionWithComics>> =
+    /**
+     * Não esta funcionando - Preciso revisar !!!
+        val allCollectionsWithComics: LiveData<List<CollectionWithComics>> =
         dao.getCollectionWithComics().asLiveData()
+     */
 
     fun insert(collection: Collection) {
         viewModelScope.launch {
@@ -29,6 +32,38 @@ class CollectionViewModel(private val dao: CollectionDao) : ViewModel() {
         viewModelScope.launch {
             dao.delete(collection)
         }
+    }
+
+    fun getCollection(id: Int): Collection {
+        allCollections.value?.forEach {
+            if (id == it.collectionId) {
+                return it
+            }
+        }
+        return Collection(
+            -1,
+            "",
+            "",
+        )
+    }
+
+    /**
+     * Não esta funcionando - Preciso revisar !!!
+        fun getCollectionWithComics(id: Int): Collection {
+            allCollectionsWithComics.value?.forEach {
+                if (id == it.collection.collectionId) {
+                return it.collection
+                }
+            }
+            return Collection(
+                -1,
+                "",
+            )
+        }
+     */
+
+    fun getStartPoint(): Int {
+        return allCollections.value?.get(allCollections.value?.size ?: 0)?.collectionId ?: 0
     }
 }
 

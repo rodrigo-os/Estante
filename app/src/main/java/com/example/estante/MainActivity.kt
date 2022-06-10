@@ -18,14 +18,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.estante.ui.theme.EstanteTheme
-import com.example.estante.views.collection.CollectionViewModel
-import com.example.estante.views.collection.CollectionViewModelFactory
-import com.example.estante.views.collection.CollectionsScreen
+import com.example.estante.views.collection.*
 import com.example.estante.views.comic.ComicViewModel
 import com.example.estante.views.comic.ComicViewModelFactory
 import com.example.estante.views.comic.ComicsScreen
@@ -48,6 +48,10 @@ class MainActivity : ComponentActivity() {
                 (this.applicationContext as BookshelfApplication).bookshelfDatabase.collectionDao()
             )
         }
+
+        val collectionViewModelSaveEdit: CollectionViewModelSaveEdit by viewModels()
+        collectionViewModelSaveEdit.startBy(collectionViewModel.getStartPoint())
+
         val comicViewModel: ComicViewModel by viewModels<ComicViewModel> {
             ComicViewModelFactory(
                 (this.applicationContext as BookshelfApplication).bookshelfDatabase.comicDao()
@@ -64,6 +68,7 @@ class MainActivity : ComponentActivity() {
                     BookshelfApp(
                         userViewModel,
                         collectionViewModel,
+                        collectionViewModelSaveEdit,
                         comicViewModel,
                     )
                 }
@@ -76,6 +81,7 @@ class MainActivity : ComponentActivity() {
 fun BookshelfApp(
     userViewModel: UserViewModel,
     collectionViewModel: CollectionViewModel,
+    collectionViewModelSaveEdit: CollectionViewModelSaveEdit,
     comicViewModel: ComicViewModel,
 ) {
     val navController = rememberNavController()
@@ -118,24 +124,48 @@ fun BookshelfApp(
             navController = navController,
             startDestination = Screen.UserScreen.route
         ) {
+
             composable(Screen.UserScreen.route) {
                 UsersScreen(navController, userViewModel)
             }
+
+            composable(Screen.UserDetails.route) {
+
+            }
+
             composable(Screen.CollectionScreen.route) {
                 CollectionsScreen(navController, collectionViewModel)
             }
-            composable(Screen.ComicScreen.route) {
-                ComicsScreen(navController, comicViewModel)
-            }
-            composable(Screen.UserDetails.route) {
 
+            composable(
+                route = "collection/{collectionId}",
+                arguments = listOf(navArgument("collectionId"){
+                    defaultValue = -1
+                    type = NavType.IntType
+                })
+            ){
+                val collection = collectionViewModel.getCollection(
+                    it.arguments?.getInt("collectionId") ?: -1
+                )
+                CollectionSaveEditScreen(
+                    collection = collection,
+                    collectionViewModel = collectionViewModel,
+                    navController = navController,
+                    collectionViewModelSaveEdit = collectionViewModelSaveEdit
+                )
             }
             composable(Screen.CollectionDetails.route) {
 
             }
+
+            composable(Screen.ComicScreen.route) {
+                ComicsScreen(navController, comicViewModel)
+            }
+
             composable(Screen.ComicDetails.route) {
 
             }
+
         }
     }
 }
@@ -145,7 +175,6 @@ private val bottomNavScreens = listOf(
     Screen.CollectionScreen,
     Screen.ComicScreen
 )
-
 
 sealed class Screen(
     val route: String,
