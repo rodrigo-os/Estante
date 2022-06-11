@@ -29,9 +29,7 @@ import com.example.estante.views.collection.*
 import com.example.estante.views.comic.ComicViewModel
 import com.example.estante.views.comic.ComicViewModelFactory
 import com.example.estante.views.comic.ComicsScreen
-import com.example.estante.views.user.UserViewModel
-import com.example.estante.views.user.UserViewModelFactory
-import com.example.estante.views.user.UsersScreen
+import com.example.estante.views.user.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +40,9 @@ class MainActivity : ComponentActivity() {
                 (this.applicationContext as BookshelfApplication).bookshelfDatabase.userDao()
             )
         }
+
+        val userViewModelSaveEdit: UserViewModelSaveEdit by viewModels()
+        userViewModelSaveEdit.startBy(userViewModel.getStartPoint())
 
         val collectionViewModel: CollectionViewModel by viewModels<CollectionViewModel> {
             CollectionViewModelFactory(
@@ -67,6 +68,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     BookshelfApp(
                         userViewModel,
+                        userViewModelSaveEdit,
                         collectionViewModel,
                         collectionViewModelSaveEdit,
                         comicViewModel,
@@ -80,6 +82,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BookshelfApp(
     userViewModel: UserViewModel,
+    userViewModelSaveEdit: UserViewModelSaveEdit,
     collectionViewModel: CollectionViewModel,
     collectionViewModelSaveEdit: CollectionViewModelSaveEdit,
     comicViewModel: ComicViewModel,
@@ -127,6 +130,24 @@ fun BookshelfApp(
 
             composable(Screen.UserScreen.route) {
                 UsersScreen(navController, userViewModel)
+            }
+
+            composable(
+                route = "user/{userId}",
+                arguments = listOf(navArgument("userId"){
+                    defaultValue = -1
+                    type = NavType.IntType
+                })
+            ){
+                val user = userViewModel.getUser(
+                    it.arguments?.getInt("userId") ?: -1
+                )
+                UserSaveEditScreen(
+                    user = user,
+                    userViewModel = userViewModel,
+                    navController = navController,
+                    userViewModelSaveEdit = userViewModelSaveEdit
+                )
             }
 
             composable(Screen.UserDetails.route) {

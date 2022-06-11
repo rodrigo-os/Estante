@@ -6,17 +6,17 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "user",
-    foreignKeys = [
-        ForeignKey(
-            entity = Collection::class,
-            parentColumns = arrayOf("collectionId"),
-            childColumns = arrayOf("collections"),
-            onDelete = ForeignKey.CASCADE
-        ),
-    ]
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = Collection::class,
+//            parentColumns = arrayOf("collectionId"),
+//            childColumns = arrayOf("collections"),
+//            onDelete = ForeignKey.CASCADE
+//        ),
+//    ]
     )
 data class User(
     @PrimaryKey(autoGenerate = true) val userId: Int = 0,
     val name: String,
-    val collections: Int,
+    val collections: String,
 )

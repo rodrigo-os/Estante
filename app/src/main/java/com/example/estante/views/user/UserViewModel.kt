@@ -9,30 +9,13 @@ import java.lang.IllegalArgumentException
 
 class UserViewModel(private val dao: UserDao) : ViewModel() {
 
-//    private val _userList: MutableLiveData<List<User>> = MutableLiveData(
-//        listOf(
-//            User(
-//                0,
-//                "Rodrigo Oliveira da Silva",
-//                0,
-//            ),
-//            User(
-//                1,
-//                "João",
-//                0,
-//            ),
-//            User(
-//                2,
-//                "Maria",
-//                0,
-//            ),
-//        )
-//    )
-
     val allUsers: LiveData<List<User>> = dao.getUsers().asLiveData()
 
-    val allUsersWithCollectionsAndComics: LiveData<List<UserWithCollectionsAndComics>> =
+    /**
+     * Não esta funcionando - Preciso revisar !!!
+        val allUsersWithCollectionsAndComics: LiveData<List<UserWithCollectionsAndComics>> =
         dao.getUserWithCollectionsAndComics().asLiveData()
+     */
 
     fun insert(user: User) {
         viewModelScope.launch {
@@ -50,6 +33,39 @@ class UserViewModel(private val dao: UserDao) : ViewModel() {
         viewModelScope.launch {
             dao.delete(user)
         }
+    }
+
+    fun getUser(id: Int): User{
+        allUsers.value?.forEach{
+            if(id == it.userId){
+                return it
+            }
+        }
+        return User(
+            -1,
+            "",
+            "",
+        )
+    }
+
+    /**
+     * Não esta funcionando - Preciso revisar !!!
+        fun getCollectionWithComics(id: Int): User {
+            allUsersWithCollectionsAndComics.value?.forEach {
+                if (id == it.user.userId) {
+                    return it.user
+                }
+            }
+            return User(
+                -1,
+                "",
+                "",
+            )
+        }
+     */
+
+    fun getStartPoint(): Int {
+        return allUsers.value?.get(allUsers.value?.size ?: 0)?.userId ?: 0
     }
 }
 
