@@ -26,9 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.estante.ui.theme.EstanteTheme
 import com.example.estante.views.collection.*
-import com.example.estante.views.comic.ComicViewModel
-import com.example.estante.views.comic.ComicViewModelFactory
-import com.example.estante.views.comic.ComicsScreen
+import com.example.estante.views.comic.*
 import com.example.estante.views.user.*
 
 class MainActivity : ComponentActivity() {
@@ -58,6 +56,9 @@ class MainActivity : ComponentActivity() {
                 (this.applicationContext as BookshelfApplication).bookshelfDatabase.comicDao()
             )
         }
+        val comicViewModelSaveEdit: ComicViewModelSaveEdit by viewModels()
+        comicViewModelSaveEdit.startBy(comicViewModel.getStartPoint())
+
 
         setContent {
             EstanteTheme {
@@ -72,6 +73,7 @@ class MainActivity : ComponentActivity() {
                         collectionViewModel,
                         collectionViewModelSaveEdit,
                         comicViewModel,
+                        comicViewModelSaveEdit,
                     )
                 }
             }
@@ -86,6 +88,7 @@ fun BookshelfApp(
     collectionViewModel: CollectionViewModel,
     collectionViewModelSaveEdit: CollectionViewModelSaveEdit,
     comicViewModel: ComicViewModel,
+    comicViewModelSaveEdit: ComicViewModelSaveEdit
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -181,6 +184,24 @@ fun BookshelfApp(
 
             composable(Screen.ComicScreen.route) {
                 ComicsScreen(navController, comicViewModel)
+            }
+
+            composable(
+                route = "comic/{comicId}",
+                arguments = listOf(navArgument("comicId"){
+                    defaultValue = -1
+                    type = NavType.IntType
+                })
+            ){
+                val comic = comicViewModel.getComic(
+                    it.arguments?.getInt("comicId") ?: -1
+                )
+                ComicSaveEditScreen(
+                    comic = comic,
+                    comicViewModel = comicViewModel,
+                    navController = navController,
+                    comicViewModelSaveEdit = comicViewModelSaveEdit
+                )
             }
 
             composable(Screen.ComicDetails.route) {

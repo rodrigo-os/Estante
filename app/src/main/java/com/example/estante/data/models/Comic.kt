@@ -6,15 +6,15 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "comic",
-    foreignKeys = [
-        ForeignKey(
-            entity = Collection::class,
-            parentColumns = arrayOf("collectionId"),
-            childColumns = arrayOf("collectionComicId"),
-            onDelete = ForeignKey.SET_NULL,
-            onUpdate = ForeignKey.CASCADE
-        )
-    ]
+//    foreignKeys = [
+//        ForeignKey(
+//            entity = Collection::class,
+//            parentColumns = arrayOf("collectionId"),
+//            childColumns = arrayOf("collectionComicId"),
+//            onDelete = ForeignKey.SET_NULL,
+//            onUpdate = ForeignKey.CASCADE
+//        )
+//    ]
 
 )
 data class Comic(
