@@ -1,4 +1,4 @@
-package com.example.estante.views.user
+package com.example.estante.views.character
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -9,24 +9,24 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.estante.data.models.User
+import com.example.estante.data.models.Character
 
 @Composable
-fun UserSaveEditScreen(
-    user: User,
-    userViewModel: UserViewModel,
+fun CharacterSaveEditScreen(
+    character: Character,
+    characterViewModel: CharacterViewModel,
     navController: NavController,
-    addEditUserViewModel: AddEditUserViewModel
+    addEditCharacterViewModel: AddEditCharacterViewModel
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                if (user.userId == -1) {
-                    addEditUserViewModel.insert(userViewModel::insert)
+                if (character.characterId == -1) {
+                    addEditCharacterViewModel.insert(characterViewModel::insert)
                 } else {
-                    addEditUserViewModel.update(
-                        user.userId,
-                        userViewModel::update
+                    addEditCharacterViewModel.update(
+                        character.characterId,
+                        characterViewModel::update
                     )
                 }
                 navController.popBackStack()
@@ -38,27 +38,27 @@ fun UserSaveEditScreen(
             }
         }
     ) {
-        addEditUserViewModel.name.value = user.name
-        addEditUserViewModel.collections.value = user.collections
-        UserForm(
-            addEditUserViewModel,
-            userViewModel,
-            user,
+        addEditCharacterViewModel.name.value = character.name
+        addEditCharacterViewModel.creators.value = character.creators
+        CharacterForm(
+            addEditCharacterViewModel,
+            characterViewModel,
+            character,
         ){
-            navController.navigate("user")
+            navController.navigate("character")
         }
     }
 }
 
 @Composable
-fun UserForm(
-    addEditUserViewModel: AddEditUserViewModel,
-    userViewModel: UserViewModel,
-    user: User,
+fun CharacterForm(
+    addEditCharacterViewModel: AddEditCharacterViewModel,
+    characterViewModel: CharacterViewModel,
+    character: Character,
     navigateBack: () -> Unit,
 ){
-    val name = addEditUserViewModel.name.observeAsState()
-    val collections = addEditUserViewModel.collections.observeAsState()
+    val name = addEditCharacterViewModel.name.observeAsState()
+    val creators = addEditCharacterViewModel.creators.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -74,11 +74,11 @@ fun UserForm(
                     .fillMaxWidth()
                     .padding(all = 10.dp),
                 label = {
-                    Text(text = "Nome do Usuário")
+                    Text(text = "Nome do Personagem")
                 },
                 value = "${name.value}",
                 onValueChange = {
-                    addEditUserViewModel.name.value = it
+                    addEditCharacterViewModel.name.value = it
                 }
             )
             OutlinedTextField(
@@ -86,19 +86,19 @@ fun UserForm(
                     .fillMaxWidth()
                     .padding(bottom = 10.dp, start = 8.dp, end = 8.dp, top = 10.dp),
                 label = {
-                    Text(text = "Coleções que pertencem ao Usuário")
+                    Text(text = "Criadores")
                 },
-                value = "${collections.value}",
+                value = "${creators.value}",
                 onValueChange = {
-                    addEditUserViewModel.collections.value = it
+                    addEditCharacterViewModel.creators.value = it
                 }
             )
         }
-        if(user.userId != -1){
+        if(character.characterId != -1){
             FloatingActionButton(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
-                    userViewModel.delete(user)
+                    characterViewModel.delete(character)
                     navigateBack()
                 }
             ) {

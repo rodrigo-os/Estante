@@ -1,4 +1,4 @@
-package com.example.estante.views.user
+package com.example.estante.views.character
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,18 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.estante.data.models.User
+import com.example.estante.data.models.Character
 
 @Composable
-fun UsersScreen(
+fun CharacterScreen(
     navController: NavController,
-    userListViewModel: UserViewModel,
+    CharacterListViewModel: CharacterViewModel,
 ) {
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate("user/-1")
+                navController.navigate("character/-1")
             }) {
                 Icon(
                     modifier = Modifier
@@ -42,11 +42,11 @@ fun UsersScreen(
             }
         }
     ) {
-        val user by userListViewModel.allUsers.observeAsState(listOf())
+        val character by CharacterListViewModel.allCharacters.observeAsState(listOf())
 
         Column() {
-            UserList(
-                user,
+            CharacterList(
+                character,
                 navController
             )
         }
@@ -54,22 +54,22 @@ fun UsersScreen(
 }
 
 @Composable
-fun UserList(
-    users: List<User>,
+fun CharacterList(
+    characters: List<Character>,
     navController: NavController
 ) {
     LazyColumn() {
-        items(users) { user ->
-            UserItem(user) {
-                navController.navigate("user/${user.userId}")
+        items(characters) { character ->
+            CharacterItem(character) {
+                navController.navigate("character/${character.characterId}")
             }
         }
     }
 }
 
 @Composable
-fun UserItem(
-    user: User,
+fun CharacterItem(
+    character: Character,
     edit: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -100,7 +100,7 @@ fun UserItem(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "${user.userId}",
+                        text = "${character.characterId}",
                         style = MaterialTheme.typography.h3
                             .copy(
                                 color = Color.White
@@ -111,7 +111,7 @@ fun UserItem(
                     modifier = Modifier
                         .padding(all = 0.dp)
                         .weight(1f),
-                    text = user.name,
+                    text = character.name,
                     style = MaterialTheme.typography.h5
                         .copy(
                             color = Color.White
@@ -144,7 +144,7 @@ fun UserItem(
                             .padding(all = 8.dp)
                     ) {
                         Text(
-                            text = "Nome do Usuário: ${user.name}",
+                            text = "Nome do Personagem: ${character.name}",
                             style = MaterialTheme.typography.subtitle2.copy(
                                 color = Color.White
                             )
@@ -155,7 +155,7 @@ fun UserItem(
                             .padding(all = 8.dp)
                     ){
                         Text(
-                            text = "Coleções: ${user.collections}",
+                            text = "Criadores: ${character.creators}",
                             style = MaterialTheme.typography.subtitle2.copy(
                                 color = Color.White
                             )

@@ -2,7 +2,7 @@ package com.example.estante.data.daos
 
 import androidx.room.*
 import com.example.estante.data.models.Comic
-import com.example.estante.data.models.ComicWithCollection
+import com.example.estante.data.models.ComicWithCharacters
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,5 +21,5 @@ interface ComicDao {
 
     @Transaction
     @Query("SELECT * FROM comic")
-    fun getComicWithCollection(): Flow<List<ComicWithCollection>>
+    fun getComicWithCharacters(): Flow<List<ComicWithCharacters>>
 }

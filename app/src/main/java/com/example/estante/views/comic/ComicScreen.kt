@@ -144,7 +144,7 @@ fun ComicItem(
                             .padding(all=8.dp)
                     ) {
                         Text(
-                            text = "Título: ${comic.title}",
+                            text = "Título da Publicação: ${comic.title}",
                             style = MaterialTheme.typography.subtitle2.copy(
                                 color = Color.White
                             )

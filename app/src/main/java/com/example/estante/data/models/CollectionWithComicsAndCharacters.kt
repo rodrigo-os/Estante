@@ -1,14 +1,14 @@
 package com.example.estante.data.models
 
 import androidx.room.Embedded
-import androidx.room.Junction
 import androidx.room.Relation
 
-data class CollectionWithComics(
+data class CollectionWithComicsAndCharacters(
     @Embedded val collection: Collection,
     @Relation(
+        entity = Comic::class,
         parentColumn = "collectionId",
-        entityColumn = "collectionComicId",
+        entityColumn = "comicId"
     )
-    val comics: List<Comic>
+    val comics: List<ComicWithCharacters>
 )

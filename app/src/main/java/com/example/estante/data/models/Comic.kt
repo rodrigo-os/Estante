@@ -8,5 +8,4 @@ data class Comic(
     @PrimaryKey(autoGenerate = true) val comicId: Int = 0,
     val title: String,
     val publisher: String,
-    val collectionComicId: Int? = null
 )

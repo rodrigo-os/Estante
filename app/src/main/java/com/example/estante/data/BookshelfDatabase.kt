@@ -6,20 +6,20 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.estante.data.daos.CollectionDao
 import com.example.estante.data.daos.ComicDao
-import com.example.estante.data.daos.UserDao
-import com.example.estante.data.models.User
+import com.example.estante.data.daos.CharacterDao
+import com.example.estante.data.models.Character
 import com.example.estante.data.models.Collection
 import com.example.estante.data.models.Comic
 
 @Database(
-    entities = [User::class, Collection::class, Comic::class],
+    entities = [Collection::class, Comic::class,Character::class],
     version = 1,
     exportSchema = false,
 )
 abstract class BookshelfDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao
     abstract fun collectionDao(): CollectionDao
     abstract fun comicDao(): ComicDao
+    abstract fun characterDao(): CharacterDao
 
     companion object {
         @Volatile

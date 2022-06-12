@@ -27,18 +27,11 @@ import androidx.navigation.navArgument
 import com.example.estante.ui.theme.EstanteTheme
 import com.example.estante.views.collection.*
 import com.example.estante.views.comic.*
-import com.example.estante.views.user.*
+import com.example.estante.views.character.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userViewModel: UserViewModel by viewModels<UserViewModel> {
-            UserViewModelFactory(
-                (this.applicationContext as BookshelfApplication).bookshelfDatabase.userDao()
-            )
-        }
-        val addEditUserViewModel: AddEditUserViewModel by viewModels()
-        addEditUserViewModel.startBy(userViewModel.getStartPoint())
         val collectionViewModel: CollectionViewModel by viewModels<CollectionViewModel> {
             CollectionViewModelFactory(
                 (this.applicationContext as BookshelfApplication).bookshelfDatabase.collectionDao()
@@ -55,6 +48,13 @@ class MainActivity : ComponentActivity() {
         val addEditComicViewModel: AddEditComicViewModel by viewModels()
         addEditComicViewModel.startBy(comicViewModel.getStartPoint())
 
+        val characterViewModel: CharacterViewModel by viewModels<CharacterViewModel> {
+            CharacterViewModelFactory(
+                (this.applicationContext as BookshelfApplication).bookshelfDatabase.characterDao()
+            )
+        }
+        val addEditCharacterViewModel: AddEditCharacterViewModel by viewModels()
+        addEditCharacterViewModel.startBy(characterViewModel.getStartPoint())
 
         setContent {
             EstanteTheme {
@@ -64,12 +64,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     BookshelfApp(
-                        userViewModel,
-                        addEditUserViewModel,
                         collectionViewModel,
                         addEditCollectionViewModel,
                         comicViewModel,
                         addEditComicViewModel,
+                        characterViewModel,
+                        addEditCharacterViewModel,
                     )
                 }
             }
@@ -79,12 +79,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun BookshelfApp(
-    userViewModel: UserViewModel,
-    addEditUserViewModel: AddEditUserViewModel,
     collectionViewModel: CollectionViewModel,
     addEditCollectionViewModel: AddEditCollectionViewModel,
     comicViewModel: ComicViewModel,
-    addEditComicViewModel: AddEditComicViewModel
+    addEditComicViewModel: AddEditComicViewModel,
+    characterViewModel: CharacterViewModel,
+    addEditCharacterViewModel: AddEditCharacterViewModel,
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -124,34 +124,8 @@ fun BookshelfApp(
         NavHost(
             modifier = Modifier.padding(it),
             navController = navController,
-            startDestination = Screen.UserScreen.route
+            startDestination = Screen.CollectionScreen.route
         ) {
-
-            composable(Screen.UserScreen.route) {
-                UsersScreen(navController, userViewModel)
-            }
-
-            composable(
-                route = "user/{userId}",
-                arguments = listOf(navArgument("userId") {
-                    defaultValue = -1
-                    type = NavType.IntType
-                })
-            ) {
-                val user = userViewModel.getUser(
-                    it.arguments?.getInt("userId") ?: -1
-                )
-                UserSaveEditScreen(
-                    user = user,
-                    userViewModel = userViewModel,
-                    navController = navController,
-                    addEditUserViewModel = addEditUserViewModel
-                )
-            }
-
-            composable(Screen.UserDetails.route) {
-
-            }
 
             composable(Screen.CollectionScreen.route) {
                 CollectionsScreen(navController, collectionViewModel)
@@ -204,14 +178,40 @@ fun BookshelfApp(
 
             }
 
+            composable(Screen.CharacterScreen.route) {
+                CharacterScreen(navController, characterViewModel)
+            }
+
+            composable(
+                route = "character/{characterId}",
+                arguments = listOf(navArgument("characterId") {
+                    defaultValue = -1
+                    type = NavType.IntType
+                })
+            ) {
+                val character = characterViewModel.getCharacter(
+                    it.arguments?.getInt("characterId") ?: -1
+                )
+                CharacterSaveEditScreen(
+                    character = character,
+                    characterViewModel = characterViewModel,
+                    navController = navController,
+                    addEditCharacterViewModel = addEditCharacterViewModel
+                )
+            }
+
+            composable(Screen.CharacterDetails.route) {
+
+            }
+
         }
     }
 }
 
 private val bottomNavScreens = listOf(
-    Screen.UserScreen,
     Screen.CollectionScreen,
-    Screen.ComicScreen
+    Screen.ComicScreen,
+    Screen.CharacterScreen
 )
 
 sealed class Screen(
@@ -219,16 +219,17 @@ sealed class Screen(
     @DrawableRes val icon: Int,
     @StringRes val name: Int,
 ) {
-    object UserScreen : Screen("user", R.drawable.user_icon, R.string.user)
     object CollectionScreen :
         Screen("collection", R.drawable.collection_icon, R.string.collection)
 
     object ComicScreen : Screen("comic", R.drawable.comic_icon, R.string.comic)
 
+    object CharacterScreen : Screen("character", R.drawable.character_icon, R.string.character)
 
-    object UserDetails : Screen("user_details", R.drawable.user_icon, R.string.user)
     object CollectionDetails :
         Screen("collection_details", R.drawable.collection_icon, R.string.collection)
 
     object ComicDetails : Screen("comic_details", R.drawable.comic_icon, R.string.comic)
+
+    object CharacterDetails : Screen("character_details", R.drawable.character_icon, R.string.character)
 }
