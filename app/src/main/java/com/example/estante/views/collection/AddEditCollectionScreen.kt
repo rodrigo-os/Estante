@@ -3,8 +3,7 @@ package com.example.estante.views.collection
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,30 +16,32 @@ fun CollectionSaveEditScreen(
     collection: Collection,
     collectionViewModel: CollectionViewModel,
     navController: NavController,
-    collectionViewModelSaveEdit: CollectionViewModelSaveEdit
+    addEditCollectionViewModel: AddEditCollectionViewModel
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 if (collection.collectionId == -1) {
-                    collectionViewModelSaveEdit.insert(collectionViewModel::insert)
+                    addEditCollectionViewModel.insert(collectionViewModel::insert)
                 } else {
-                    collectionViewModelSaveEdit.update(
+                    addEditCollectionViewModel.update(
                         collection.collectionId,
                         collectionViewModel::update
                     )
                 }
                 navController.popBackStack()
             }) {
-                Icon(imageVector = Icons.Default.Done, contentDescription = "Confirm")
+                Icon(
+                    imageVector = Icons.Outlined.Done,
+                    contentDescription = "Done"
+                )
             }
         }
     ) {
-        collectionViewModelSaveEdit.name.value = collection.collectionName
-        collectionViewModelSaveEdit.note.value = collection.note
-
+        addEditCollectionViewModel.name.value = collection.collectionName
+        addEditCollectionViewModel.note.value = collection.note
         CollectionForm(
-            collectionViewModelSaveEdit,
+            addEditCollectionViewModel,
             collectionViewModel,
             collection
         ) {
@@ -51,13 +52,13 @@ fun CollectionSaveEditScreen(
 
 @Composable
 fun CollectionForm(
-    collectionViewModelSaveEdit: CollectionViewModelSaveEdit,
+    addEditCollectionViewModel: AddEditCollectionViewModel,
     collectionViewModel: CollectionViewModel,
     collection: Collection,
-    navBack: () -> Unit
+    navigateBack: () -> Unit
 ) {
-    val name = collectionViewModelSaveEdit.name.observeAsState()
-    val note = collectionViewModelSaveEdit.note.observeAsState()
+    val name = addEditCollectionViewModel.name.observeAsState()
+    val note = addEditCollectionViewModel.note.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -66,43 +67,43 @@ fun CollectionForm(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp),
+                .padding(all = 10.dp),
         ) {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp, start = 8.dp, end = 8.dp, top = 10.dp),
+                    .padding(all = 10.dp),
                 label = {
                     Text(text = "Nome da Coleção")
                 },
                 value = "${name.value}",
                 onValueChange = {
-                    collectionViewModelSaveEdit.name.value = it
+                    addEditCollectionViewModel.name.value = it
                 }
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp, start = 8.dp, end = 8.dp, top = 10.dp),
+                    .padding(all = 10.dp),
                 label = {
                     Text(text = "Lembrete")
                 },
                 value = "${note.value}",
                 onValueChange = {
-                    collectionViewModelSaveEdit.note.value = it
+                    addEditCollectionViewModel.note.value = it
                 }
             )
         }
         if (collection.collectionId != -1) {
             FloatingActionButton(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(all = 16.dp),
                 onClick = {
                     collectionViewModel.delete(collection)
-                    navBack()
+                    navigateBack()
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete"
                 )
             }

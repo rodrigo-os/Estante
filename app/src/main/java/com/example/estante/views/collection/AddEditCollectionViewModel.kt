@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.estante.data.models.Collection
 
-class CollectionViewModelSaveEdit : ViewModel() {
+class AddEditCollectionViewModel : ViewModel() {
     private val _collectionId: MutableLiveData<Int> = MutableLiveData()
     val name: MutableLiveData<String> = MutableLiveData()
     val note: MutableLiveData<String> = MutableLiveData()
@@ -33,7 +33,7 @@ class CollectionViewModelSaveEdit : ViewModel() {
         updateCollection: (Collection) -> Unit
     ) {
         val collection = Collection(
-            _collectionId.value ?: return,
+            id,
             name.value ?: return,
             note.value ?: return,
         )

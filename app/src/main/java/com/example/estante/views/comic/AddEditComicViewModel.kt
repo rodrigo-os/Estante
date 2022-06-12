@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.estante.data.models.Comic
 
-class ComicViewModelSaveEdit : ViewModel() {
+class AddEditComicViewModel : ViewModel() {
     private val _comicId: MutableLiveData<Int> = MutableLiveData()
     val title: MutableLiveData<String> = MutableLiveData()
     val publisher: MutableLiveData<String> = MutableLiveData()
@@ -33,7 +33,7 @@ class ComicViewModelSaveEdit : ViewModel() {
         updateComic: (Comic) -> Unit
     ) {
         val comic = Comic(
-            _comicId.value ?: return,
+            id,
             title.value ?: return,
             publisher.value ?: return,
         )

@@ -3,8 +3,7 @@ package com.example.estante.views.comic
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -17,30 +16,32 @@ fun ComicSaveEditScreen(
     comic: Comic,
     comicViewModel: ComicViewModel,
     navController: NavController,
-    comicViewModelSaveEdit: ComicViewModelSaveEdit
+    addEditComicViewModel: AddEditComicViewModel
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 if (comic.comicId == -1) {
-                    comicViewModelSaveEdit.insert(comicViewModel::insert)
+                    addEditComicViewModel.insert(comicViewModel::insert)
                 } else {
-                    comicViewModelSaveEdit.update(
+                    addEditComicViewModel.update(
                         comic.comicId,
                         comicViewModel::update
                     )
                 }
                 navController.popBackStack()
             }) {
-                Icon(imageVector = Icons.Default.Done, contentDescription = "Confirm")
+                Icon(
+                    imageVector = Icons.Outlined.Done,
+                    contentDescription = "Done"
+                )
             }
         }
     ) {
-        comicViewModelSaveEdit.title.value = comic.title
-        comicViewModelSaveEdit.publisher.value = comic.publisher
-
+        addEditComicViewModel.title.value = comic.title
+        addEditComicViewModel.publisher.value = comic.publisher
         ComicForm(
-            comicViewModelSaveEdit,
+            addEditComicViewModel,
             comicViewModel,
             comic
         ) {
@@ -51,13 +52,13 @@ fun ComicSaveEditScreen(
 
 @Composable
 fun ComicForm(
-    comicViewModelSaveEdit: ComicViewModelSaveEdit,
+    addEditComicViewModel: AddEditComicViewModel,
     comicViewModel: ComicViewModel,
     comic: Comic,
-    navBack: () -> Unit
+    navigateBack: () -> Unit
 ) {
-    val title = comicViewModelSaveEdit.title.observeAsState()
-    val publisher = comicViewModelSaveEdit.publisher.observeAsState()
+    val title = addEditComicViewModel.title.observeAsState()
+    val publisher = addEditComicViewModel.publisher.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -71,13 +72,13 @@ fun ComicForm(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 10.dp, start = 8.dp, end = 8.dp, top = 10.dp),
+                    .padding(all = 10.dp),
                 label = {
-                    Text(text = "Título")
+                    Text(text = "Título da Publicação")
                 },
                 value = "${title.value}",
                 onValueChange = {
-                    comicViewModelSaveEdit.title.value = it
+                    addEditComicViewModel.title.value = it
                 }
             )
             OutlinedTextField(
@@ -89,7 +90,7 @@ fun ComicForm(
                 },
                 value = "${publisher.value}",
                 onValueChange = {
-                    comicViewModelSaveEdit.publisher.value = it
+                    addEditComicViewModel.publisher.value = it
                 }
             )
         }
@@ -98,11 +99,11 @@ fun ComicForm(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
                     comicViewModel.delete(comic)
-                    navBack()
+                    navigateBack()
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete"
                 )
             }

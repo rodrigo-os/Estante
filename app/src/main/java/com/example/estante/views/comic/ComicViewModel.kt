@@ -2,20 +2,25 @@ package com.example.estante.views.comic
 
 import androidx.lifecycle.*
 import com.example.estante.data.daos.ComicDao
-import com.example.estante.data.models.Collection
 import com.example.estante.data.models.Comic
-import com.example.estante.data.models.ComicWithCollection
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class ComicViewModel(private val dao: ComicDao) : ViewModel() {
     val allComics: LiveData<List<Comic>> = dao.getComics().asLiveData()
 
-    /**
-     * Não esta funcionando - Preciso revisar !!!
-        val allComicsWithCollections: LiveData<List<ComicWithCollection>> =
-        dao.getComicWithCollection().asLiveData()
-     */
+    fun getComic(id: Int): Comic {
+        allComics.value?.forEach {
+            if (id == it.comicId) {
+                return it
+            }
+        }
+        return Comic(
+            -1,
+            "",
+            "",
+        )
+    }
 
     fun insert(comic: Comic) {
         viewModelScope.launch {
@@ -34,34 +39,6 @@ class ComicViewModel(private val dao: ComicDao) : ViewModel() {
             dao.delete(comic)
         }
     }
-
-    fun getComic(id: Int): Comic {
-        allComics.value?.forEach {
-            if (id == it.comicId) {
-                return it
-            }
-        }
-        return Comic(
-            -1,
-            "",
-            "",
-        )
-    }
-    /**
-     * Não esta funcionando - Preciso revisar !!!
-        fun getComicWithCollection(id: Int): Comic {
-            allComicsWithCollections.value?.forEach {
-                if (id == it.comic.comicId) {
-                    return it.comic
-                }
-            }
-            return Comic(
-                -1,
-                "",
-                "",
-            )
-        }
-     */
 
     fun getStartPoint(): Int {
         return allComics.value?.get(allComics.value?.size ?: 0)?.comicId ?: 0

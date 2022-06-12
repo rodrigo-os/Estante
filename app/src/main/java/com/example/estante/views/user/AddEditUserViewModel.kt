@@ -4,8 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.estante.data.models.User
 
-class UserViewModelSaveEdit : ViewModel(){
-
+class AddEditUserViewModel : ViewModel(){
     private val _userId: MutableLiveData<Int> = MutableLiveData()
     val name: MutableLiveData<String> = MutableLiveData()
     val collections: MutableLiveData<String> = MutableLiveData()
@@ -16,12 +15,11 @@ class UserViewModelSaveEdit : ViewModel(){
 
     fun insert(
         insertUser: (User) -> Unit
-    ){
+    ) {
         val newUser = User(
             _userId.value?: return,
             name.value?: return,
             collections.value?: return,
-
         )
         insertUser(newUser)
         var newIndex = _userId.value ?: return
@@ -35,8 +33,7 @@ class UserViewModelSaveEdit : ViewModel(){
         updateUser: (User) -> Unit
     ){
         val user = User(
-//            _userId.value ?: return,
-            id, // revisar aqui
+            id,
             name.value?: return,
             collections.value?: return,
         )

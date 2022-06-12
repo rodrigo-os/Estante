@@ -6,19 +6,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.estante.data.models.Collection
@@ -33,8 +29,15 @@ fun CollectionsScreen(
             FloatingActionButton(onClick = {
                 navController.navigate("collection/-1")
             }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add a new Collection")
+                Icon(
+                    modifier = Modifier
+                        .size(30.dp),
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = "Add",
+                    tint = Color.Black
 
+
+                )
             }
         }
     ) {
@@ -46,7 +49,6 @@ fun CollectionsScreen(
                 navController
             )
         }
-
     }
 }
 
@@ -70,10 +72,9 @@ fun CollectionItem(
     edit: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-
     Card(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(start= 10.dp, top=  10.dp, end = 10.dp, bottom =  0.dp)
             .clickable {
                 expanded = !expanded
             }
@@ -83,43 +84,45 @@ fun CollectionItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = Color.DarkGray)
-                    .padding(0.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(all = 5.dp),
+                verticalAlignment = Alignment.Top
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(all = 5.dp)
                         .border(
-                            width = 3.dp,
-                            color = Color.LightGray,
-                            shape = CircleShape
+                            width = 1.dp,
+                            color = Color.Cyan,
+                            shape = AbsoluteRoundedCornerShape(10.dp)
                         )
-                        .size(75.dp)
-                        .clip(CircleShape)
-                        .background(Color.DarkGray),
+                        .size(70.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "${collection.collectionId}",
                         style = MaterialTheme.typography.h3
-                            .copy(color = Color.White, fontWeight = FontWeight.Normal)
+                            .copy(
+                                color = Color.White
+                            )
                     )
                 }
                 Text(
                     modifier = Modifier
-                        .padding(start = 8.dp)
+                        .padding(all = 0.dp)
                         .weight(1f),
                     text = collection.collectionName,
                     style = MaterialTheme.typography.h5
-                        .copy(color = Color.White, fontWeight = FontWeight.Bold)
+                        .copy(
+                            color = Color.White
+                        )
                 )
                 if (expanded) {
                     Icon(
                         modifier = Modifier
-                            .padding(0.dp, 0.dp, 20.dp, 0.dp)
-                            .size(32.dp)
+                            .padding(all = 5.dp)
+                            .size(30.dp)
                             .clickable { edit() },
-                        imageVector = Icons.Default.Edit,
+                        imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit",
                         tint = Color.White
                     )
@@ -129,41 +132,35 @@ fun CollectionItem(
                 Column(
                     modifier = Modifier
                         .border(
-                            width = 5.dp,
+                            width = 10.dp,
                             color = Color.DarkGray,
-                            shape = RoundedCornerShape(2.dp)
                         )
-                        .padding(12.dp)
-                ) {
+                        .padding(all=10.dp)
+                        .fillMaxWidth()
+                ){
                     Row(
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier
+                            .padding(all=8.dp)
                     ) {
                         Text(
-                            modifier = Modifier
-                                .padding(bottom = 5.dp)
-                                .weight(1f),
-                            text = "ID: ${collection.collectionId}",
-                            style = MaterialTheme.typography.subtitle1.copy(
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
+                            text = "Nome da Coleção: ${collection.collectionName}",
+                            style = MaterialTheme.typography.subtitle2.copy(
+                                color = Color.White
+                            )
+                        )
+
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(all=8.dp)
+                    ){
+                        Text(
+                            text = "Lembrete: ${collection.note}",
+                            style = MaterialTheme.typography.subtitle2.copy(
+                                color = Color.White
                             )
                         )
                     }
-                    Text(
-                        text = "Nome: ${collection.collectionName}",
-                        style = MaterialTheme.typography.subtitle1.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                    Text(
-                        text = "Lembrete: ${collection.note}",
-                        style = MaterialTheme.typography.subtitle1.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
                 }
             }
         }

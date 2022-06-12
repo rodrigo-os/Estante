@@ -3,12 +3,10 @@ package com.example.estante.views.user
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.estante.data.models.User
@@ -18,27 +16,32 @@ fun UserSaveEditScreen(
     user: User,
     userViewModel: UserViewModel,
     navController: NavController,
-    userViewModelSaveEdit: UserViewModelSaveEdit
+    addEditUserViewModel: AddEditUserViewModel
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 if (user.userId == -1) {
-                    userViewModelSaveEdit.insert(userViewModel::insert)
+                    addEditUserViewModel.insert(userViewModel::insert)
                 } else {
-                    userViewModelSaveEdit.update(user.userId, userViewModel::update)
+                    addEditUserViewModel.update(
+                        user.userId,
+                        userViewModel::update
+                    )
                 }
                 navController.popBackStack()
             }) {
-                Icon(imageVector = Icons.Default.Done, contentDescription = "Confirm")
+                Icon(
+                    imageVector = Icons.Outlined.Done,
+                    contentDescription = "Done"
+                )
             }
         }
     ) {
-        userViewModelSaveEdit.name.value = user.name
-        userViewModelSaveEdit.collections.value = user.collections
-
+        addEditUserViewModel.name.value = user.name
+        addEditUserViewModel.collections.value = user.collections
         UserForm(
-            userViewModelSaveEdit,
+            addEditUserViewModel,
             userViewModel,
             user,
         ){
@@ -49,13 +52,13 @@ fun UserSaveEditScreen(
 
 @Composable
 fun UserForm(
-    userViewModelSaveEdit: UserViewModelSaveEdit,
+    addEditUserViewModel: AddEditUserViewModel,
     userViewModel: UserViewModel,
     user: User,
     navigateBack: () -> Unit,
 ){
-    val name = userViewModelSaveEdit.name.observeAsState()
-    val collections = userViewModelSaveEdit.collections.observeAsState()
+    val name = addEditUserViewModel.name.observeAsState()
+    val collections = addEditUserViewModel.collections.observeAsState()
 
     Column(
         modifier = Modifier.fillMaxHeight(),
@@ -64,38 +67,30 @@ fun UserForm(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 14.dp),
+                .padding(bottom = 10.dp),
         ) {
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 14.dp, start = 6.dp, end = 6.dp, top = 6.dp),
+                    .padding(all = 10.dp),
                 label = {
                     Text(text = "Nome do Usuário")
                 },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedLabelColor = Color.Yellow,
-                    focusedBorderColor = Color.Yellow
-                ),
                 value = "${name.value}",
                 onValueChange = {
-                    userViewModelSaveEdit.name.value = it
+                    addEditUserViewModel.name.value = it
                 }
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 14.dp, start = 6.dp, end = 6.dp),
+                    .padding(bottom = 10.dp, start = 8.dp, end = 8.dp, top = 10.dp),
                 label = {
                     Text(text = "Coleções que pertencem ao Usuário")
                 },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedLabelColor = Color.Yellow,
-                    focusedBorderColor = Color.Yellow
-                ),
                 value = "${collections.value}",
                 onValueChange = {
-                    userViewModelSaveEdit.collections.value = it
+                    addEditUserViewModel.collections.value = it
                 }
             )
         }
@@ -108,7 +103,7 @@ fun UserForm(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Outlined.Delete,
                     contentDescription = "Delete"
                 )
             }

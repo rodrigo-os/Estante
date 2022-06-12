@@ -6,25 +6,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.estante.data.models.Collection
 import com.example.estante.data.models.Comic
-import com.example.estante.views.collection.CollectionItem
-import com.example.estante.views.collection.CollectionList
 
 @Composable
 fun ComicsScreen(
@@ -37,19 +30,26 @@ fun ComicsScreen(
             FloatingActionButton(onClick = {
                 navController.navigate("comic/-1")
             }) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add a new Comic")
+                Icon(
+                    modifier = Modifier
+                        .size(30.dp),
+                    imageVector = Icons.Outlined.Add,
+                    contentDescription = "Add",
+                    tint = Color.Black
 
+
+                )
             }
         }
     ) {
         val comic by comicListViewModel.allComics.observeAsState(listOf())
+
         Column() {
             ComicList(
                 comic,
                 navController
             )
         }
-
     }
 }
 
@@ -73,10 +73,9 @@ fun ComicItem(
     edit: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-
     Card(
         modifier = Modifier
-            .padding(10.dp)
+            .padding(start= 10.dp, top=  10.dp, end = 10.dp, bottom =  0.dp)
             .clickable {
                 expanded = !expanded
             }
@@ -86,43 +85,45 @@ fun ComicItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = Color.DarkGray)
-                    .padding(0.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(all = 5.dp),
+                verticalAlignment = Alignment.Top
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(5.dp)
+                        .padding(all = 5.dp)
                         .border(
-                            width = 3.dp,
-                            color = Color.LightGray,
-                            shape = CircleShape
+                            width = 1.dp,
+                            color = Color.Cyan,
+                            shape = AbsoluteRoundedCornerShape(10.dp)
                         )
-                        .size(75.dp)
-                        .clip(CircleShape)
-                        .background(Color.DarkGray),
+                        .size(70.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "${comic.comicId}",
                         style = MaterialTheme.typography.h3
-                            .copy(color = Color.White, fontWeight = FontWeight.Normal)
+                            .copy(
+                                color = Color.White
+                            )
                     )
                 }
                 Text(
                     modifier = Modifier
-                        .padding(start = 8.dp)
+                        .padding(all = 0.dp)
                         .weight(1f),
                     text = comic.title,
                     style = MaterialTheme.typography.h5
-                        .copy(color = Color.White, fontWeight = FontWeight.Bold)
+                        .copy(
+                            color = Color.White
+                        )
                 )
                 if (expanded) {
                     Icon(
                         modifier = Modifier
-                            .padding(0.dp, 0.dp, 20.dp, 0.dp)
-                            .size(32.dp)
+                            .padding(all = 5.dp)
+                            .size(30.dp)
                             .clickable { edit() },
-                        imageVector = Icons.Default.Edit,
+                        imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit",
                         tint = Color.White
                     )
@@ -132,41 +133,34 @@ fun ComicItem(
                 Column(
                     modifier = Modifier
                         .border(
-                            width = 5.dp,
+                            width = 10.dp,
                             color = Color.DarkGray,
-                            shape = RoundedCornerShape(2.dp)
                         )
-                        .padding(12.dp)
-                ) {
+                        .padding(all=10.dp)
+                        .fillMaxWidth()
+                ){
                     Row(
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier
+                            .padding(all=8.dp)
                     ) {
                         Text(
-                            modifier = Modifier
-                                .padding(bottom = 5.dp)
-                                .weight(1f),
-                            text = "ID: ${comic.comicId}",
-                            style = MaterialTheme.typography.subtitle1.copy(
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
+                            text = "Título: ${comic.title}",
+                            style = MaterialTheme.typography.subtitle2.copy(
+                                color = Color.White
                             )
                         )
                     }
-                    Text(
-                        text = "Título: ${comic.title}",
-                        style = MaterialTheme.typography.subtitle1.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
+                    Row(
+                        modifier = Modifier
+                            .padding(all=8.dp)
+                    ){
+                        Text(
+                            text = "Editora: ${comic.publisher}",
+                            style = MaterialTheme.typography.subtitle2.copy(
+                                color = Color.White
+                            )
                         )
-                    )
-                    Text(
-                        text = "Editora: ${comic.publisher}",
-                        style = MaterialTheme.typography.subtitle1.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
+                    }
                 }
             }
         }
