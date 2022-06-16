@@ -29,6 +29,10 @@ import com.example.estante.views.collection.*
 import com.example.estante.views.comic.*
 import com.example.estante.views.character.*
 
+import com.example.estante.data.models.Collection
+import com.example.estante.data.models.Comic
+import com.example.estante.data.models.Character
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,6 +91,10 @@ fun BookshelfApp(
     addEditCharacterViewModel: AddEditCharacterViewModel,
 ) {
     val navController = rememberNavController()
+
+    // Devem ser pré cadastrados pelo menos 6 itens de cada entidade.
+    insertIntoDB(collectionViewModel,comicViewModel,characterViewModel) // Cadastrar itens no BD.
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -232,4 +240,138 @@ sealed class Screen(
     object ComicDetails : Screen("comic_details", R.drawable.comic_icon, R.string.comic)
 
     object CharacterDetails : Screen("character_details", R.drawable.character_icon, R.string.character)
+}
+
+fun insertIntoDB(
+    collectionViewModel: CollectionViewModel,
+    comicViewModel: ComicViewModel,
+    characterViewModel: CharacterViewModel,
+){
+
+    val collection01 = Collection(
+        1,
+        "Favoritos",
+        "Apenas as melhores obras literárias."
+    )
+    collectionViewModel.insert(collection01)
+
+    val collection02 = Collection(
+        2,
+        "Lista de desejos",
+        "Ainda não os adquiri, mas estão no meu radar."
+    )
+    collectionViewModel.insert(collection02)
+
+    val collection03 = Collection(
+        3,
+        "Ignorados",
+        "Não possuo interesse em lê-los novamente."
+    )
+    collectionViewModel.insert(collection03)
+
+    val collection04 = Collection(
+        4,
+        "Guilty pleasure",
+        "Gosto mas sei que a qualidade é duvidosa."
+    )
+    collectionViewModel.insert(collection04)
+
+    val collection05 = Collection(
+        5,
+        "Não gostei",
+        "Como o nome já diz, obras que eu li e não tive uma boa experiência."
+    )
+    collectionViewModel.insert(collection05)
+
+    val collection06 = Collection(
+        6,
+        "Recomendações",
+        "Obras que me foram recomendadas."
+    )
+    collectionViewModel.insert(collection06)
+
+    val comic01 = Comic(
+        1,
+        "Demolidor - A Queda De Murdock",
+        "Panini",
+    )
+    comicViewModel.insert(comic01)
+
+    val comic02 = Comic(
+        2,
+        "Thor - O Último Viking",
+        "Salvat",
+    )
+    comicViewModel.insert(comic02)
+
+    val comic03 = Comic(
+        3,
+        "Maus",
+        "Cia. das Letras",
+    )
+    comicViewModel.insert(comic03)
+
+    val comic04 = Comic(
+        4,
+        "Thor - Contos de Asgard",
+        "Salvat",
+    )
+    comicViewModel.insert(comic04)
+
+    val comic05 = Comic(
+        5,
+        "Demolidor - Por Frank Miller & Klaus Janson n° 1",
+        "Panini",
+    )
+    comicViewModel.insert(comic05)
+
+    val comic06 = Comic(
+        6,
+        "Pantera Negra - Vingadores do Novo Mundo n° 1",
+        "Panini",
+    )
+    comicViewModel.insert(comic06)
+
+    val character01 = Character(
+        1,
+        "Demolidor",
+        "Bill Everett, Stan Lee",
+    )
+    characterViewModel.insert(character01)
+
+    val character02 = Character(
+        2,
+        "Thor",
+        "Stan Lee, Jack Kirby, Larry Lieber",
+    )
+    characterViewModel.insert(character02)
+
+    val character03 = Character(
+        3,
+        "Pantera Negra",
+        "Stan Lee, Jack Kirby",
+    )
+    characterViewModel.insert(character03)
+
+    val character04 = Character(
+        4,
+        "Cavaleiro da Lua",
+        "Doug Moench, Don Perlin",
+    )
+    characterViewModel.insert(character04)
+
+    val character05 = Character(
+        5,
+        "Batman",
+        "Bob Kane, Bill Finger",
+    )
+    characterViewModel.insert(character05)
+
+    val character06 = Character(
+        6,
+        "Rorschach",
+        "Alan Moore, Dave Gibbons",
+    )
+    characterViewModel.insert(character06)
+
 }
